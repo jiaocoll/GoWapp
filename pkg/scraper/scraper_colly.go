@@ -11,7 +11,6 @@ import (
 	"github.com/gocolly/colly"
 	extensions "github.com/gocolly/colly/extensions"
 
-	log "github.com/sirupsen/logrus"
 )
 
 type CollyScraper struct {
