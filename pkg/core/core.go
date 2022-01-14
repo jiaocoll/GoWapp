@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
-	scraper "github.com/unstppbl/gowap/pkg/scraper"
+	scraper "github.com/jiaocoll/GoWapp/pkg/scraper"
 	log "github.com/sirupsen/logrus"
 
 	jsoniter "github.com/json-iterator/go"
@@ -137,12 +137,9 @@ func Init(config *Config) (wapp *Wappalyzer, err error) {
 
 	var appsFile []byte
 	if config.AppsJSONPath != "" {
-		log.Infof("Trying to open technologies file at %s", config.AppsJSONPath)
 		appsFile, err = ioutil.ReadFile(config.AppsJSONPath)
 		if err != nil {
 			log.Warningf("Couldn't open file at %s\n", config.AppsJSONPath)
-		} else {
-			log.Infof("Technologies file opened")
 		}
 	}
 	if config.AppsJSONPath == "" || len(appsFile) == 0 {
@@ -240,7 +237,6 @@ func (wapp *Wappalyzer) Analyze(paramURL string) (result interface{}, err error)
 	paramURL = strings.TrimRight(paramURL, "/")
 	toVisitURLs[paramURL] = struct{}{}
 	for depth := 0; depth <= wapp.Config.MaxDepth; depth++ {
-		log.Printf("Depth : %d", depth)
 		wapp.Scraper.SetDepth(depth)
 		links, visitedURLs, retErr := analyzePages(toVisitURLs, wapp, detectedApplications)
 		//If we have at least one page ok => no error
@@ -309,7 +305,6 @@ func analyzePages(paramURLs map[string]struct{}, wapp *Wappalyzer, detectedAppli
 
 // Analyze retrieves application stack used on the provided web-site
 func analyzePage(paramURL string, wapp *Wappalyzer, detectedApplications *detected) (links *map[string]struct{}, scrapedURL *scraper.ScrapedURL, err error) {
-	log.Printf("Analyzing %s", paramURL)
 	if !validateURL(paramURL) {
 		log.Errorf("URL not valid : %s", paramURL)
 		return nil, &scraper.ScrapedURL{URL: paramURL, Status: 400}, errors.New("UrlNotValid")
