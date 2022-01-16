@@ -23,9 +23,9 @@ import (
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 var wg sync.WaitGroup
 
-//go:embed assets/technologies.json
+//go:embed wapp.json
 var f embed.FS
-var embedPath = "assets/technologies.json"
+var embedPath = "wapp.json"
 
 // Config for gowap
 type Config struct {
