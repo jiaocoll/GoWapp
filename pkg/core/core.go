@@ -23,9 +23,6 @@ import (
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 var wg sync.WaitGroup
 
-//go:embed wapp.json
-var f embed.FS
-var embedPath = "wapp.json"
 
 // Config for gowap
 type Config struct {
@@ -107,7 +104,7 @@ type Wappalyzer struct {
 }
 
 // Init initializes wappalyzer
-func Init(config *Config) (wapp *Wappalyzer, err error) {
+func Init(config *Config,f embed.FS) (wapp *Wappalyzer, err error) {
 	wapp = &Wappalyzer{Config: config}
 	// Scraper initialization
 	switch config.Scraper {
@@ -143,7 +140,7 @@ func Init(config *Config) (wapp *Wappalyzer, err error) {
 		}
 	}
 	if config.AppsJSONPath == "" || len(appsFile) == 0 {
-		appsFile, err = f.ReadFile(embedPath)
+		appsFile, err = f.ReadFile("wapp.json")
 		if err != nil {
 			return nil, err
 		}
