@@ -727,10 +727,11 @@ func getLinksSlice(doc *goquery.Document, currentURL string) *map[string]struct{
 			fmt.Println("parsedLink.Scheme parsedCurrentURL.Scheme")
 			parsedLink.Scheme = parsedCurrentURL.Scheme
 			}
-		}
-		if matched := protocolRegex.MatchString(parsedLink.Scheme); matched && (parsedLink.Host == "" || parsedLink.Host == parsedCurrentURL.Host) {
+			if matched := protocolRegex.MatchString(parsedLink.Scheme); matched && (parsedLink.Host == "" || parsedLink.Host == parsedCurrentURL.Host) {
 			ret[parsedLink.Scheme+"://"+parsedCurrentURL.Host+strings.TrimRight(parsedLink.Path, "/")] = struct{}{}
+			}
 		}
+		
 	})
 	return &ret
 }
