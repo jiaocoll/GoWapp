@@ -8,6 +8,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"fmt"
+	"github.com/fatih/color"
 
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/proto"
