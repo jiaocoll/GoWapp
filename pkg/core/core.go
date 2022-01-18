@@ -63,7 +63,7 @@ type application struct {
 	Slug       string
 	Name       string             `json:"name,omitempty"`
 	Version    string             `json:"version"`
-	Categories []extendedCategory `json:"categories,omitempty"`
+	Categories []ExtendedCategory `json:"categories,omitempty"`
 	Icon       string             `json:"icon,omitempty"`
 	Website    string             `json:"website,omitempty"`
 	CPE        string             `json:"cpe,omitempty"`
@@ -88,7 +88,7 @@ type category struct {
 	Priority int    `json:"priority,omitempty"`
 }
 
-type extendedCategory struct {
+type ExtendedCategory struct {
 	ID       int    `json:"id"`
 	Slug     string `json:"slug"`
 	Name     string `json:"name"`
@@ -99,7 +99,7 @@ type extendedCategory struct {
 type Wappalyzer struct {
 	Scraper    scraper.Scraper
 	Apps       map[string]*application
-	Categories map[string]*extendedCategory
+	Categories map[string]*ExtendedCategory
 	Config     *Config
 }
 
@@ -158,7 +158,7 @@ func parseTechnologiesFile(appsFile *[]byte, wapp *Wappalyzer) error {
 		return err
 	}
 	wapp.Apps = make(map[string]*application)
-	wapp.Categories = make(map[string]*extendedCategory)
+	wapp.Categories = make(map[string]*ExtendedCategory)
 	for k, v := range temporary.Categories {
 		catg := &category{}
 		if err = json.Unmarshal(*v, catg); err != nil {
@@ -169,7 +169,7 @@ func parseTechnologiesFile(appsFile *[]byte, wapp *Wappalyzer) error {
 		if err == nil {
 			slug, err := slugify(catg.Name)
 			if err == nil {
-				extCatg := &extendedCategory{catID, slug, catg.Name, catg.Priority}
+				extCatg := &ExtendedCategory{catID, slug, catg.Name, catg.Priority}
 				wapp.Categories[k] = extCatg
 			}
 		}
@@ -197,12 +197,12 @@ func parseTechnologiesFile(appsFile *[]byte, wapp *Wappalyzer) error {
 }
 
 type resultApp struct {
-	technology technology
+	technology Technology
 	excludes   interface{}
 	implies    interface{}
 }
 
-type technology struct {
+type Technology struct {
 	Slug       string             `json:"slug"`
 	Name       string             `json:"name"`
 	Confidence int                `json:"confidence"`
@@ -210,7 +210,7 @@ type technology struct {
 	Icon       string             `json:"icon"`
 	Website    string             `json:"website"`
 	CPE        string             `json:"cpe"`
-	Categories []extendedCategory `json:"categories"`
+	Categories []ExtendedCategory `json:"categories"`
 }
 
 type detected struct {
@@ -218,9 +218,9 @@ type detected struct {
 	Apps map[string]*resultApp
 }
 
-type output struct {
+type Output struct {
 	URLs         []scraper.ScrapedURL `json:"urls,omitempty"`
-	Technologies []technology         `json:"technologies,omitempty"`
+	Technologies []Technology         `json:"technologies,omitempty"`
 }
 
 func (wapp *Wappalyzer) Analyze(paramURL string) (result interface{}, err error) {
@@ -252,7 +252,7 @@ func (wapp *Wappalyzer) Analyze(paramURL string) (result interface{}, err error)
 		}
 	}
 	if err == nil {
-		res := &output{}
+		res := &Output{}
 		for _, visited := range globalVisitedURLs {
 			res.URLs = append(res.URLs, visited)
 		}
@@ -698,7 +698,7 @@ func resolveImplies(apps *map[string]*application, detected *map[string]*resultA
 	}
 }
 
-func parseCategories(app *application, categoriesCatalog *map[string]*extendedCategory) {
+func parseCategories(app *application, categoriesCatalog *map[string]*ExtendedCategory) {
 	for _, categoryID := range app.Cats {
 		app.Categories = append(app.Categories, *(*categoriesCatalog)[strconv.Itoa(categoryID)])
 	}
