@@ -13,7 +13,6 @@ import (
 	"github.com/go-rod/rod/lib/proto"
 	"github.com/temoto/robotstxt"
 
-	log "github.com/sirupsen/logrus"
 )
 
 type RodScraper struct {
@@ -37,7 +36,6 @@ func (s *RodScraper) SetDepth(depth int) {
 }
 
 func (s *RodScraper) Init() error {
-	log.Infoln("Rod initialization")
 	return rod.Try(func() {
 		s.lock = &sync.RWMutex{}
 		s.robotsMap = make(map[string]*robotstxt.RobotsData)
@@ -75,7 +73,7 @@ func (s *RodScraper) Scrape(paramURL string) (*ScrapedData, error) {
 			MustNavigate(paramURL)
 	})
 	if errRod != nil {
-		log.Errorf("Error while visiting %s : %s", paramURL, errRod.Error())
+		fmt.Fprintln(color.Output, color.HiRedString("[ERROR]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[GoWappRod]:", "Error while visiting %s : %s", paramURL, errRod.Error())
 		return scraped, errRod
 	}
 
@@ -99,7 +97,7 @@ func (s *RodScraper) Scrape(paramURL string) (*ScrapedData, error) {
 			MustWaitLoad()
 	})
 	if errRod != nil {
-		log.Errorf("Error while loading %s : %s", paramURL, errRod.Error())
+		fmt.Fprintln(color.Output, color.HiRedString("[ERROR]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[GoWappRod]:", "Error while loading %s : %s", paramURL, errRod.Error())
 		return scraped, errRod
 	}
 
