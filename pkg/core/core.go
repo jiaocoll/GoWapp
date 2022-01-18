@@ -555,7 +555,7 @@ func analyzeCertIssuer(app *application, certIssuer []string, detectedApplicatio
 func addApp(app *application, detectedApplications *detected, version string, confidence int) {
 	detectedApplications.Mu.Lock()
 	if _, ok := (*detectedApplications).Apps[app.Name]; !ok {
-		resApp := &resultApp{technology{app.Slug, app.Name, confidence, version, app.Icon, app.Website, app.CPE, app.Categories}, app.Excludes, app.Implies}
+		resApp := &resultApp{Technology{app.Slug, app.Name, confidence, version, app.Icon, app.Website, app.CPE, app.Categories}, app.Excludes, app.Implies}
 		(*detectedApplications).Apps[resApp.technology.Name] = resApp
 	} else {
 		if (*detectedApplications).Apps[app.Name].technology.Version == "" {
@@ -688,7 +688,7 @@ func resolveImplies(apps *map[string]*application, detected *map[string]*resultA
 		for _, implied := range v {
 			app, ok := (*apps)[implied.str]
 			if _, ok2 := (*detected)[implied.str]; ok && !ok2 {
-				resApp := &resultApp{technology{app.Slug, app.Name, implied.confidence, implied.version, app.Icon, app.Website, app.CPE, app.Categories}, app.Excludes, app.Implies}
+				resApp := &resultApp{Technology{app.Slug, app.Name, implied.confidence, implied.version, app.Icon, app.Website, app.CPE, app.Categories}, app.Excludes, app.Implies}
 				(*detected)[implied.str] = resApp
 				if app.Implies != nil {
 					resolveImplies(apps, detected, app.Implies)
