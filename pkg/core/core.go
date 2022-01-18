@@ -724,7 +724,6 @@ func getLinksSlice(doc *goquery.Document, currentURL string) *map[string]struct{
 		parsedLink, _ := url.Parse(rawLink)
 		if parsedLink != nil{
 			if parsedLink.Scheme == "" && parsedCurrentURL.Scheme != ""{
-			fmt.Println("parsedLink.Scheme parsedCurrentURL.Scheme")
 			parsedLink.Scheme = parsedCurrentURL.Scheme
 			}
 			if matched := protocolRegex.MatchString(parsedLink.Scheme); matched && (parsedLink.Host == "" || parsedLink.Host == parsedCurrentURL.Host) {
