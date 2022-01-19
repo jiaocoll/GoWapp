@@ -75,7 +75,7 @@ func (s *RodScraper) Scrape(paramURL string) (*ScrapedData, error) {
 			MustNavigate(paramURL)
 	})
 	if errRod != nil {
-		fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[GoWappRod]:", "Error while visiting %s : %s", paramURL, errRod.Error())
+		fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[GoWappRod]:", "Error while visiting", paramURL, errRod.Error())
 		return scraped, errRod
 	}
 
@@ -99,7 +99,7 @@ func (s *RodScraper) Scrape(paramURL string) (*ScrapedData, error) {
 			MustWaitLoad()
 	})
 	if errRod != nil {
-		fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[GoWappRod]:", "Error while loading %s : %s", paramURL, errRod.Error())
+		fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[GoWappRod]:", "Error while loading", paramURL, errRod.Error())
 		return scraped, errRod
 	}
 
