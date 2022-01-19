@@ -123,12 +123,12 @@ func Init(config *Config,f embed.FS) (wapp *Wappalyzer, err error) {
 		}
 		err = wapp.Scraper.Init()
 	default:
-		fmt.Fprintln(color.Output, color.HiRedString("[ERROR]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", config.Scraper)
+		fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", config.Scraper)
 		err = errors.New("UnknownScraper")
 	}
 
 	if err != nil {
-		fmt.Fprintln(color.Output, color.HiRedString("[ERROR]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", config.Scraper,err)
+		fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", config.Scraper,err)
 		return nil, err
 	}
 
@@ -136,7 +136,7 @@ func Init(config *Config,f embed.FS) (wapp *Wappalyzer, err error) {
 	if config.AppsJSONPath != "" {
 		appsFile, err = ioutil.ReadFile(config.AppsJSONPath)
 		if err != nil {
-			fmt.Fprintln(color.Output, color.HiYellowString("[WARNING]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Couldn't open file ",config.AppsJSONPath)
+			fmt.Fprintln(color.Output, color.HiYellowString("[WARN]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Couldn't open file ",config.AppsJSONPath)
 		}
 	}
 	if config.AppsJSONPath == "" || len(appsFile) == 0 {
@@ -154,7 +154,7 @@ func parseTechnologiesFile(appsFile *[]byte, wapp *Wappalyzer) error {
 	temporary := &temp{}
 	err := json.Unmarshal(*appsFile, &temporary)
 	if err != nil {
-		fmt.Fprintln(color.Output, color.HiRedString("[ERROR]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Couldn't unmarshal apps.json file:",err)
+		fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Couldn't unmarshal apps.json file:",err)
 		return err
 	}
 	wapp.Apps = make(map[string]*application)
@@ -162,7 +162,7 @@ func parseTechnologiesFile(appsFile *[]byte, wapp *Wappalyzer) error {
 	for k, v := range temporary.Categories {
 		catg := &category{}
 		if err = json.Unmarshal(*v, catg); err != nil {
-			fmt.Fprintln(color.Output, color.HiRedString("[ERROR]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Couldn't unmarshal Categories:",err)
+			fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Couldn't unmarshal Categories:",err)
 			return err
 		}
 		catID, err := strconv.Atoi(k)
@@ -175,14 +175,14 @@ func parseTechnologiesFile(appsFile *[]byte, wapp *Wappalyzer) error {
 		}
 	}
 	if len(wapp.Categories) < 1 {
-		fmt.Fprintln(color.Output, color.HiRedString("[ERROR]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Couldn't find categories in technologies file")
+		fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Couldn't find categories in technologies file")
 		return errors.New("NoCategoryFound")
 	}
 	for k, v := range temporary.Apps {
 		app := &application{}
 		app.Name = k
 		if err = json.Unmarshal(*v, app); err != nil {
-			fmt.Fprintln(color.Output, color.HiRedString("[ERROR]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Couldn't unmarshal Apps:",err)
+			fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Couldn't unmarshal Apps:",err)
 			return err
 		}
 		parseCategories(app, &wapp.Categories)
@@ -190,7 +190,7 @@ func parseTechnologiesFile(appsFile *[]byte, wapp *Wappalyzer) error {
 		wapp.Apps[k] = app
 	}
 	if len(wapp.Apps) < 1 {
-		fmt.Fprintln(color.Output, color.HiRedString("[ERROR]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Couldn't find technologies in technologies file")
+		fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Couldn't find technologies in technologies file")
 		return errors.New("NoTechnologyFound")
 	}
 	return err
@@ -300,13 +300,13 @@ func analyzePages(paramURLs map[string]struct{}, wapp *Wappalyzer, detectedAppli
 // Analyze retrieves application stack used on the provided web-site
 func analyzePage(paramURL string, wapp *Wappalyzer, detectedApplications *detected) (links *map[string]struct{}, scrapedURL *scraper.ScrapedURL, err error) {
 	if !validateURL(paramURL) {
-		fmt.Fprintln(color.Output, color.HiYellowString("[WARNING]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "URL not valid:",paramURL)
+		fmt.Fprintln(color.Output, color.HiYellowString("[WARN]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "URL not valid:",paramURL)
 		return nil, &scraper.ScrapedURL{URL: paramURL, Status: 400}, errors.New("UrlNotValid")
 	}
 
 	scraped, err := wapp.Scraper.Scrape(paramURL)
 	if err != nil {
-		fmt.Fprintln(color.Output, color.HiRedString("[ERROR]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Scraper failed:",err)
+		fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Scraper failed:",err)
 		return nil, &scraper.ScrapedURL{URL: paramURL, Status: 400}, err
 	}
 
@@ -492,7 +492,7 @@ func analyzeDom(app *application, doc *goquery.Document, detectedApplications *d
 			domParsed[domSelector.(string)] = map[string]interface{}{"exists": ""}
 		}
 	default:
-		fmt.Fprintln(color.Output, color.HiRedString("[ERROR]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Unknown type in analyzeDom:",doms)
+		fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Unknown type in analyzeDom:",doms)
 	}
 
 	for domSelector, v1 := range domParsed {
@@ -627,7 +627,7 @@ func parsePatterns(patterns interface{}) (result map[string][]*pattern) {
 					parsed[k] = append(parsed[k], v1.(string))
 				}
 			default:
-				fmt.Fprintln(color.Output, color.HiRedString("[ERROR]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Unknown type in parsePatterns:",v)
+				fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Unknown type in parsePatterns:",v)
 			}
 		}
 	case []interface{}:
@@ -637,7 +637,7 @@ func parsePatterns(patterns interface{}) (result map[string][]*pattern) {
 		}
 		parsed["main"] = slice
 	default:
-		fmt.Fprintln(color.Output, color.HiRedString("[ERROR]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Unknown type in parsePatterns:",ptrn)
+		fmt.Fprintln(color.Output, color.HiRedString("[ERRO]"), "["+time.Now().Format("2006-01-02 15:04:05")+"]", "[Gowapp]:", "Unknown type in parsePatterns:",ptrn)
 	}
 	result = make(map[string][]*pattern)
 	for k, v := range parsed {
