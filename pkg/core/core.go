@@ -230,6 +230,7 @@ func (wapp *Wappalyzer) Analyze(paramURL string) (result interface{}, err error)
 	err = errors.New("analyzePageFailed")
 
 	paramURL = strings.TrimRight(paramURL, "/")
+	paramURL = paramURL + "/"
 	toVisitURLs[paramURL] = struct{}{}
 	for depth := 0; depth <= wapp.Config.MaxDepth; depth++ {
 		wapp.Scraper.SetDepth(depth)
