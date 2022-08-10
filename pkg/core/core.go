@@ -231,7 +231,9 @@ func (wapp *Wappalyzer) Analyze(paramURL string) (result interface{}, err error)
 
 	paramURL = strings.TrimRight(paramURL, "/")
 	paramURL = paramURL + "/"
+	fmt.Println("tag---paramURL:",paramURL)
 	toVisitURLs[paramURL] = struct{}{}
+	fmt.Println("tag---toVisitURLs:",toVisitURLs)
 	for depth := 0; depth <= wapp.Config.MaxDepth; depth++ {
 		wapp.Scraper.SetDepth(depth)
 		links, visitedURLs, retErr := analyzePages(toVisitURLs, wapp, detectedApplications)
