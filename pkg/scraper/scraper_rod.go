@@ -167,8 +167,6 @@ func (s *RodScraper) checkRobots(u *url.URL) error {
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
 		client := &http.Client{Transport: tr}
-		fmt.Println("u.Scheme:",u.Scheme)
-		fmt.Println("u.Host:",u.Host)
 		resp, err := client.Get(u.Scheme + "://" + u.Host + "/robots.txt")
 		if err != nil {
 			return err
